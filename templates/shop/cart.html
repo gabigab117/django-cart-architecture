@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Votre Panier{% endblock %}
+
+{% block header %}🛒 Votre Panier{% endblock %}
+
+{% block content %}
+<h2>Contenu du panier</h2>
+
+{% if user.is_authenticated %}
+    <p><mark>✅ Panier utilisateur connecté (base de données)</mark></p>
+{% else %}
+    <p><mark>⚠️ Panier session (non connecté)</mark></p>
+{% endif %}
+
+{% if cart_items %}
+    <table>
+        <thead>
+            <tr>
+                <th>Produit</th>
+                <th>Prix unitaire</th>
+                <th>Quantité</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cart_items %}
+                <tr>
+                    {% if is_authenticated %}
+                        <td>{{ item.product.name }}</td>
+                        <td>{{ item.product.price }} €</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.get_total_price }} €</td>
+                    {% else %}
+                        <td>{{ item.product_name }}</td>
+                        <td>{{ item.price }} €</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.total }} €</td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3"><strong>Total</strong></td>
+                <td><strong>{{ total }} €</strong></td>
+            </tr>
+        </tfoot>
+    </table>
+    
+    <br>
+    <a href="{% url 'index' %}" role="button">← Continuer mes achats</a>
+{% else %}
+    <p>Votre panier est vide.</p>
+    <a href="{% url 'index' %}" role="button">Voir les produits</a>
+{% endif %}
+
+<br><br>
+<details>
+    <summary>ℹ️ Différence utilisateur connecté / session</summary>
+    <ul>
+        <li><strong>Utilisateur connecté:</strong> Panier sauvegardé en DB, stock décrémenté</li>
+        <li><strong>Session:</strong> Panier temporaire dans la session, stock non modifié</li>
+    </ul>
+</details>
+{% endblock %}

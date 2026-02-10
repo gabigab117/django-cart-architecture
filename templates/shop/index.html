@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Liste des produits{% endblock %}
+
+{% block header %}🛍️ Nos Produits{% endblock %}
+
+{% block content %}
+<h2>Produits disponibles</h2>
+
+{% if products %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem;">
+        {% for product in products %}
+            <article style="border: 1px solid var(--border); padding: 1rem; border-radius: 5px;">
+                <h3>{{ product.name }}</h3>
+                <p><strong>Prix:</strong> {{ product.price }} €</p>
+                <p><strong>Stock:</strong> {{ product.stock }} unités</p>
+                
+                {% if product.stock > 0 %}
+                    <form method="POST" action="{% url 'add_to_cart' product.id %}">
+                        {% csrf_token %}
+                        <label for="quantity_{{ product.id }}">Quantité:</label>
+                        <input type="number" 
+                               id="quantity_{{ product.id }}" 
+                               name="quantity" 
+                               value="1" 
+                               min="1" 
+                               max="{{ product.stock }}" 
+                               style="width: 60px;">
+                        <button type="submit">Ajouter au panier</button>
+                    </form>
+                {% else %}
+                    <p style="color: red;">Rupture de stock</p>
+                {% endif %}
+            </article>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>Aucun produit disponible pour le moment.</p>
+    <p><em>💡 Ajoutez des produits via <a href="/admin/">l'interface admin</a></em></p>
+{% endif %}
+{% endblock %}
