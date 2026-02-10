@@ -1,6 +1,9 @@
-# 🛍️ Shop Example - Version SALE
+# 🛍️ Shop Example - Version CLEAN avec Service Layer
 
-Projet pour présentation de 30 minutes: Comparaison entre code "sale" (tout dans les vues) et code propre (avec services).
+Projet Django démontrant une architecture propre avec séparation des responsabilités : 
+- **Vues** : gestion HTTP uniquement
+- **Service** : toute la logique métier encapsulée
+- Gestion transparente session/DB selon authentification
 
 ## 🚀 Démarrage rapide
 
@@ -35,14 +38,42 @@ python manage.py runserver
 - Stock **non modifié**
 - Panier temporaire
 
-## 📁 Structure
+## 📁 Structure (Clean Architecture)
 
-- `shop/models.py` - Modèle Product
-- `cart/models.py` - Modèles Cart et CartItem
-- `shop/views.py` - **VERSION SALE** : toute la logique métier dans les vues!
-- `templates/` - Templates avec Simple.css
+```
+cart/
+├── models.py          # Modèles Cart et CartItem (données)
+├── cart_service.py    # ⭐ CartService : toute la logique métier
+└── views.py           # Vues ultra-simples (3 lignes!)
+shop/
+├── models.py          # Modèle Product
+└── views.py           # Vue index
+templates/             # Templates avec Simple.css
+```
 
-## ⚡ Prochaine étape
+## ✨ Architecture Service Layer
 
-Refactoriser avec un `CartService` pour séparer la logique métier des vues!
-# django-cart-architecture
+### `CartService` - Le cerveau du panier
+
+```python
+cart_service = CartService(request)
+cart_service.add_item(product, quantity)  # Gère auto session vs DB
+items = cart_service.get_items()          # Format uniforme
+total = cart_service.get_total()          # Calcul automatique
+cart_service.clear()                      # Vider le panier
+```
+
+**Avantages :**
+- 🎯 Séparation des responsabilités
+- 🧪 Facilement testable
+- 📝 Code lisible et maintenable
+- ♻️ Réutilisable (API, CLI, etc.)
+- 🔒 La vue ne sait pas si l'utilisateur est connecté !
+
+## 🎓 Concepts démontrés
+
+- **Service Layer Pattern**
+- **Encapsulation** de la logique métier
+- **Abstraction** (session vs DB transparent)
+- **Single Responsibility Principle**
+- **DRY** (Don't Repeat Yourself)
