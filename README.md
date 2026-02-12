@@ -1,8 +1,8 @@
-# 🛍️ Shop Example - Version SALE
+# Shop Example - Legacy Code Pattern
 
-Projet pour présentation de 30 minutes: Comparaison entre code "sale" (tout dans les vues) et code propre (avec services).
+Projet de démonstration illustrant la différence entre une architecture legacy (logique métier dans les vues) et une architecture structurée avec services.
 
-## 🚀 Démarrage rapide
+## Installation
 
 ```bash
 # Migrations
@@ -16,33 +16,26 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
-## 📋 Utilisation
+## Utilisation
 
-1. **Ajouter des produits** via `/admin/`
-2. **Voir les produits** sur la page d'accueil `/`
-3. **Ajouter au panier** (fonctionne connecté ou non)
-4. **Voir le panier** `/cart/`
+1. Ajouter des produits via l'interface d'administration `/admin/`
+2. Consulter le catalogue sur `/`
+3. Ajouter des produits au panier (authentifié ou anonyme)
+4. Consulter le panier sur `/cart/`
 
-## 🔑 Différences clés
+## Comportement selon l'authentification
 
-### Utilisateur **connecté** :
-- Panier sauvegardé en DB (modèles Cart/CartItem)
-- **Stock décrémenté** automatiquement
-- Panier persistant
+**Utilisateur authentifié** : panier persistant en base de données (Cart/CartItem), décrémentation automatique du stock
 
-### Utilisateur **non connecté** :
-- Panier en session
-- Stock **non modifié**
-- Panier temporaire
+**Utilisateur anonyme** : panier temporaire en session, stock inchangé
 
-## 📁 Structure
+## Structure du projet
 
 - `shop/models.py` - Modèle Product
 - `cart/models.py` - Modèles Cart et CartItem
-- `shop/views.py` - **VERSION SALE** : toute la logique métier dans les vues!
+- `shop/views.py` - Logique métier dans les vues (pattern legacy)
 - `templates/` - Templates avec Simple.css
 
-## ⚡ Prochaine étape
+## Refactoring proposé
 
-Refactoriser avec un `CartService` pour séparer la logique métier des vues!
-# django-cart-architecture
+Extraction de la logique métier dans un `CartService` pour respecter le principe de responsabilité unique (SRP).
