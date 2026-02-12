@@ -61,7 +61,7 @@ def cart_detail(request):
         cart = request.session.get('cart', {})
         cart_items = []
         total = 0
-        for product_id, item_data in cart.items():
+        for _, item_data in cart.items():
             cart_items.append({
                 'product_name': item_data['name'],
                 'quantity': item_data['quantity'],
