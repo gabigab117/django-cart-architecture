@@ -1,79 +1,74 @@
-# 🛍️ Shop Example - Version CLEAN avec Service Layer
+# Django Shop - Clean Architecture avec Service Layer
 
-Projet Django démontrant une architecture propre avec séparation des responsabilités : 
-- **Vues** : gestion HTTP uniquement
-- **Service** : toute la logique métier encapsulée
-- Gestion transparente session/DB selon authentification
+Projet Django démontrant une architecture avec séparation des responsabilités :
+- **Views** : gestion HTTP uniquement
+- **Service** : logique métier encapsulée
+- Gestion transparente session/DB selon l'authentification utilisateur
 
-## 🚀 Démarrage rapide
+## Installation
 
 ```bash
-# Migrations
 python manage.py makemigrations
 python manage.py migrate
-
-# Créer un superuser
 python manage.py createsuperuser
-
-# Lancer le serveur
 python manage.py runserver
 ```
 
-## 📋 Utilisation
+## Utilisation
 
-1. **Ajouter des produits** via `/admin/`
-2. **Voir les produits** sur la page d'accueil `/`
-3. **Ajouter au panier** (fonctionne connecté ou non)
-4. **Voir le panier** `/cart/`
+1. Ajouter des produits via l'interface admin (`/admin/`)
+2. Consulter les produits sur la page d'accueil (`/`)
+3. Ajouter des articles au panier (authentifié ou non)
+4. Consulter le panier (`/cart/`)
 
-## 🔑 Différences clés
+## Comportement selon l'authentification
 
-### Utilisateur **connecté** :
-- Panier sauvegardé en DB (modèles Cart/CartItem)
-- **Stock décrémenté** automatiquement
-- Panier persistant
+**Utilisateur authentifié :**
+- Panier persistant en base de données (modèles Cart/CartItem)
+- Stock décrémenté automatiquement
+- Conservation du panier entre sessions
 
-### Utilisateur **non connecté** :
-- Panier en session
-- Stock **non modifié**
+**Utilisateur anonyme :**
+- Panier stocké en session
+- Stock non modifié
 - Panier temporaire
 
-## 📁 Structure (Clean Architecture)
+## Architecture
 
 ```
 cart/
-├── models.py          # Modèles Cart et CartItem (données)
-├── cart_service.py    # ⭐ CartService : toute la logique métier
-└── views.py           # Vues ultra-simples (3 lignes!)
+├── models.py          # Modèles Cart et CartItem
+├── cart_service.py    # CartService - logique métier
+└── views.py           # Vues minimalistes
 shop/
 ├── models.py          # Modèle Product
 └── views.py           # Vue index
 templates/             # Templates avec Simple.css
 ```
 
-## ✨ Architecture Service Layer
+## Service Layer Pattern
 
-### `CartService` - Le cerveau du panier
+### CartService
 
 ```python
 cart_service = CartService(request)
-cart_service.add_item(product, quantity)  # Gère auto session vs DB
-items = cart_service.get_items()          # Format uniforme
-total = cart_service.get_total()          # Calcul automatique
-cart_service.clear()                      # Vider le panier
+cart_service.add_item(product, quantity)
+items = cart_service.get_items()
+total = cart_service.get_total()
+cart_service.clear()
 ```
 
 **Avantages :**
-- 🎯 Séparation des responsabilités
-- 🧪 Facilement testable
-- 📝 Code lisible et maintenable
-- ♻️ Réutilisable (API, CLI, etc.)
-- 🔒 La vue ne sait pas si l'utilisateur est connecté !
+- Séparation des responsabilités
+- Testabilité accrue
+- Maintenabilité du code
+- Réutilisabilité (API, CLI, etc.)
+- Abstraction de l'état d'authentification
 
-## 🎓 Concepts démontrés
+## Principes démontrés
 
-- **Service Layer Pattern**
-- **Encapsulation** de la logique métier
-- **Abstraction** (session vs DB transparent)
-- **Single Responsibility Principle**
-- **DRY** (Don't Repeat Yourself)
+- Service Layer Pattern
+- Encapsulation de la logique métier
+- Abstraction des sources de données
+- Single Responsibility Principle
+- DRY (Don't Repeat Yourself)
